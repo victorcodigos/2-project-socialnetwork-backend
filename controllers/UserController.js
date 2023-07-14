@@ -1,5 +1,8 @@
 const User = require("../models/User");
+const Token = require("../models/Token");
 const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
+const { jwt_secret } = require("../config/keys");
 
 //modificar codigo para add extras
 
@@ -21,32 +24,55 @@ const UserController = {
       //   next(error) // conecta con middleware errors. borrar el console y el status.send al descomentar esto
     }
   },
-  // async login (req, res, ) {
-  //     try {
-
-  //     } catch () {
-
-  //     }
-  // }
+  async login(req, res) {
+    try {
+      const user = await User.findOne({ 
+        email: req.body.email });
+      if (!user) {
+        return res.status(400).send({ message: "Incorrect user or password" });
+      }
+      const isMatch = await bcrypt.compare(req.body.password, user.password);
+      if (!isMatch) {
+        return res.status(400).send({ message: "Incorrect user or password" });
+      }
+      const token = jwt.sign({ _id: user._id }, jwt_secret);
+     
+    await Token.create({ token, UserId: user._id });
+    console.log(user._id)
+      res.send({ message: "Welcome " + user.name, user, token });
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  },
 };
 
 module.exports = UserController;
 
-// Repo Sofi para comparar e implementar
-// async register(req, res) {
+
+
+// async login(req, res) {
 //     try {
-//         const email = req.body.email;
-//         const user = await User.findOne({ email: email })
-//         if (user) {
-//             return res.status(400).send({ message: 'Este correo ya existe' });
+//         const user = await User.findOne({
+//             nombre: req.body.nombre,
+//         })
+
+//         if (!user) {
+//             return res.status(400).send({ message: 'Contraseña o nombre incorrectos' });
 //         }
-//         const hash = await bcrypt.hash(req.body.password, 10)
-//         const newUser = await User.create({...req.body, password: hash, role: 'user' });
-//         res.status(201).send({
-//             newUser
-//         });
+//         const isMatch = await bcrypt.compare(req.body.password, user.password)
+
+//         if (!isMatch) {
+//             return res.status(400).send({ message: 'Contraseña o nombre incorrectos' });
+//         }
+
+//         token = jwt.sign({ id: user.id }, jwt_secret);
+//         if (user.tokens.length > 4) user.tokens.shift();
+//         user.tokens.push(token);
+//         await user.save();
+
+//         res.send({ message: 'Bienvenid@ ' + user.nombre, token });
+
 //     } catch (error) {
 //         console.error(error);
-//         res.status(500).send({ error, message: 'Hubo un problema al tratar de registar' })
 //     }
 // },
