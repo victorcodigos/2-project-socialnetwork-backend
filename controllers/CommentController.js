@@ -1,6 +1,6 @@
 const Comment = require("../models/Comment");
 
-//prueba, modificar codigo
+//modificar codigo para add extras
 
 const CommentController ={
     async create(req, res){
