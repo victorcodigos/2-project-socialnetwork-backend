@@ -16,6 +16,7 @@ const PostController = {
             const post = await Post.findByIdAndUpdate(req.params._id, req.body, { new: true })
             res.send({ message: "This post has been updated successfully", post });
         } catch (error) {
+            console.error(error);
             console.error({ message: "Sorry! We could not updated this post! You need to be authorized!", error })
         }
     },
@@ -29,7 +30,19 @@ const PostController = {
         }
 
     },
-
+    async getPostByName(req, res) {
+        try {
+            const title = new RegExp(req.params.name, "i");
+            const post = await Post.find({ title });
+            res.send({ message: "Yes! this is the post that you are looking for", post });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ message: "Sorry, we could not find this post", error })
+        }
+    },
+    
 }
+
+
 
 module.exports = PostController;
