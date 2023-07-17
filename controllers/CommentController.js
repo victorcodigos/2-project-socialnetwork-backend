@@ -5,7 +5,11 @@ const Comment = require("../models/Comment");
 const CommentController ={
     async create(req, res){
         try {
-            const comment = await Comment.create(req.body)
+            const comment = await Comment.create({
+                ...req.body,
+                userName: req.user.userName,
+                userId: req.user._id,
+            })
             res.status(201).send({message: "Comment posted", comment})
         } catch (error) {
             console.error(error)
