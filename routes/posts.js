@@ -7,6 +7,8 @@ const router = express.Router()
 router.post('/',PostController.create)
 router.put('/id/:_id', authentication, PostController.update)
 router.delete('/delete/:_id',authentication, PostController.delete)
+router.get('/name/:name',PostController.getPostByName)
+
 
 
 module.exports = router;
