@@ -12,13 +12,9 @@ dbConnection()
 app.use(express.json());
 
 //ROUTES /prefix
-app.use('/comments', require('./routes/comments'));
+app.use('/comments',require('./routes/comments'));
 app.use('/users', require('./routes/users'))
-
-
-
-
-
+app.use('/posts', require('./routes/posts'))
 
 
 
