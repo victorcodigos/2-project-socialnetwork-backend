@@ -25,28 +25,22 @@ const CommentController ={
             res.status(500).send({ message: "Sorry! We could not updated this comment! You need to be authorized!", error })
         }
     },
+    async delete(req,res){
+        try {
+            const comment = await Comment.findByIdAndDelete(req.params._id)
+           res.send({ message: 'Comment deleted succesfully', comment})
+        } catch (error) {
+            console.error(error)
+            res.status(500).send({ message: "there was a problem trying to remove the comment", error})
+        }
+    },
+    
 
 }
+
 
 
 module.exports = CommentController;
 
 
-// const OrderController = {
-//     . . .
-//      async update(req, res) {
-//       try {
-//         const order = await Order.findByIdAndUpdate(
-//           req.params._id,
-//           { ...req.body, userId: req.user._id },
-//           {
-//             new: true,
-//           }
-//         );
-//         res.send({ message: "order successfully updated", order });
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     },
-//   }
   
