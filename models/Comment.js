@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
 const CommentSchema = new mongoose.Schema({
-    user: String,
-    comment: String,
-    created: { type: Date, default: Date.now },
+    userName: String,
+    comment: String,    
 }, { timestamps: true });
 
 const Comment = mongoose.model('Comment', CommentSchema);

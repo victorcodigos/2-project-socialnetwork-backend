@@ -1,5 +1,4 @@
 const User = require("../models/User");
-const Token = require("../models/Token");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const { jwt_secret } = require("../config/keys.js");
@@ -58,7 +57,7 @@ const UserController = {
 
   async logout(req, res) {
     try {
-      await User.findByIdAndUpdate(req.user._id, {
+      await User.findByIdAndUpdate(req.user._id, { //req.user._id es el usuario loggeado
         $pull: { tokens: req.headers.authorization },
       });
       res.send({ message: "Disconnected successfully!" });
