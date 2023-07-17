@@ -1,5 +1,6 @@
 const Post = require ("../models/Post")
 
+
 const PostController = {
     async create(req, res) {
         try {
@@ -10,9 +11,6 @@ const PostController = {
             res.status(500).send({message: "Try again! something is not working well", error})
         }
     },
-
-    //Endpoint para actualizar un post ( tiene que estar autenticado) 
-
     async update(req, res){
         try {
             const post = await Post.findByIdAndUpdate(req.params._id, req.body, { new: true })
@@ -20,7 +18,8 @@ const PostController = {
         } catch (error) {
             console.error({message: "Sorry! We could not updated this post! You need to be authorized!", error})
         }
-    }
+    },
+    
 }
 
 module.exports = PostController;
