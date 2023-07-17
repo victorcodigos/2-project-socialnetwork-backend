@@ -1,4 +1,5 @@
-const Post = require("../models/Post")
+const Post = require("../models/Post");
+const { post } = require("../routes/posts");
 
 
 const PostController = {
@@ -40,7 +41,16 @@ const PostController = {
             res.status(500).send({ message: "Sorry, we could not find this post", error })
         }
     },
-    
+    async getById(req, res) {
+        try {
+            const post = await Post.findById(req.params._id)
+            res.send({ message: "Yes! You found your post that you are looking for!", post });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ message: "Sorry, we could not find this post", error })
+        }
+    }
+
 }
 
 
