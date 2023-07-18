@@ -8,6 +8,7 @@ const CommentController ={
             const comment = await Comment.create({
                 ...req.body,
                 userId: req.user._id, 
+                postId: req.params._id,
             })
             const populatedComment = await Comment.findById(comment._id).populate("userId", "name");
             res.status(201).send({message: "Comment posted", comment:populatedComment })

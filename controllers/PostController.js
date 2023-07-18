@@ -1,11 +1,11 @@
 const Post = require("../models/Post");
-const { post } = require("../routes/posts");
-
+const User = require("../models/User")
 
 const PostController = {
     async create(req, res) {
         try {
             const post = await Post.create(req.body);
+            await User.findByIdAndUpdate(req.user._id, { $push: { postIds: post._id } })
             res.status(201).send({ message: "Congrats! You have been created a new post!", post })
         } catch (error) {
             console.error(error);

@@ -31,6 +31,8 @@ const UserSchema = new mongoose.Schema(
     role: { type: String, default: "user" },
     tokens: [],
     postIds: [{ type: ObjectId, ref: 'Post' }],
+    followers: [{ type: ObjectId }],
+
   },
   { timestamps: true }
 );

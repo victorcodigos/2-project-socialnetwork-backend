@@ -3,12 +3,17 @@ const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const CommentSchema = new mongoose.Schema(
   {
-    comment: String,
+    comment: {
+      type: String,
+      required: [true, "You can't post an empty comment!"],
+    },
     userId: {
       type: ObjectId,
       ref: "User",
     },
     likes: [{ type: ObjectId }],
+    postId: { type: ObjectId, ref: 'Post' },
+    userId: { type: ObjectId, ref: "User" },
   },
   { timestamps: true }
 );

@@ -58,18 +58,28 @@ const UserController = {
     }
   },
 
+  // async getInfoLogged(req, res) {
+  //   try {
+  //     const user = await User.findById(req.user._id)
+  //       // .populate({
+  //       //   path: "orderIds",
+  //       //   populate: {
+  //       //     path: "productIds",
+  //       //   },
+  //       // })
+  //       // .populate({
+  //       //   path: "wishList",
+  //       // })
+  //       .populate("postIds");
+  //     res.send(user);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // },
+
   async getInfoLogged(req, res) {
     try {
       const user = await User.findById(req.user._id)
-        // .populate({
-        //   path: "orderIds",
-        //   populate: {
-        //     path: "productIds",
-        //   },
-        // })
-        // .populate({
-        //   path: "wishList",
-        // })
         .populate("postIds");
       res.send(user);
     } catch (error) {
