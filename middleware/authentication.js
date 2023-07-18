@@ -26,12 +26,12 @@ const isAuthor = async(req, res, next) => {
     try {
         const comment = await Comment.findById(req.params._id);
         if (comment.userId.toString() !== req.user._id.toString()) { 
-            return res.status(403).send({ message: 'You are not authorizated to update/delete this comment, this is not your comment' });
+            return res.status(403).send({ message: "You are not the author. You are not authorizated to update/delete" });
         }
         next();
     } catch (error) {
         console.error(error)
-        return res.status(500).send({ error, message: 'Something went wrong checking the author of this comment' })
+        return res.status(500).send({ error, message: 'Something went wrong checking the author' })
     }
 };
 

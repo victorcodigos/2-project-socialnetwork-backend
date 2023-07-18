@@ -7,10 +7,10 @@ const CommentController ={
         try {
             const comment = await Comment.create({
                 ...req.body,
-                userName: req.user.userName,
-                userId: req.user._id,
+                userId: req.user._id, 
             })
-            res.status(201).send({message: "Comment posted", comment})
+            const populatedComment = await Comment.findById(comment._id).populate("userId", "name");
+            res.status(201).send({message: "Comment posted", comment:populatedComment })
         } catch (error) {
             console.error(error)
             res.status(500).send({ message: 'Error posting the comment' })
@@ -19,26 +19,47 @@ const CommentController ={
     async update(req, res){
         try {
             const comment = await Comment.findByIdAndUpdate(req.params._id, req.body, { new: true })
-            res.send({message:"This comment has been updated successfully", comment});
+            const populatedComment = await Comment.findById(comment._id).populate("userId", "name");
+            res.send({message:"This comment has been updated successfully", comment:populatedComment});
         } catch (error) {
             console.error(error)
             next()
-            // res.status(500).send({ message: "Sorry! We could not updated this comment! You need to be authorized!", error }) 
         }
     },
     async like(req, res) {
         try {
+          const comment = await Comment.findById(req.params._id);
+          const alreadyLiked = comment.likes.includes(req.user._id)
+          if (alreadyLiked) {
+            return res
+              .status(400)
+              .send({ message: "You have already liked this comment" });
+          } else {
+            const comment = await Comment.findByIdAndUpdate(
+              req.params._id,
+              { $push: { likes: req.user._id } },
+              { new: true }
+            );
+            res.send(comment);
+          }
+        } catch (error) {
+          console.error(error);
+          res.status(500).send({ message: "There was a problem with your like" });
+        }
+      },  
+      async dislike(req, res) {
+        try {
           const comment = await Comment.findByIdAndUpdate(
             req.params._id,
-            { $push: { likes: req.user._id } },
+            { $pull: { likes: req.user._id } },
             { new: true }
           );
           res.send(comment);
         } catch (error) {
           console.error(error);
-          res.status(500).send({ message: "There was a problem with your like" });
+          res.status(500).send({ message: "There was a problem with your dislike" });
         }
-      },    
+      },   
     async delete(req,res){
         try {
             const comment = await Comment.findByIdAndDelete(req.params._id)
