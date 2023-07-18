@@ -1,25 +1,16 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const PostSchema = new mongoose.Schema({
 
-    title: {
+    post: {
         type: String,
         required: [true, "Please, insert the title"],
+    
     },
-
-    user: {
-        type: String,
-        required: [true, "Please, insert your user"],
-    },
-
-    data: {
-        type: Date,
-        required: [true, "Please insert the data"],
-    },
-    cool: {
-        type: Boolean,
-        required: [true, "Please insert the type boolean (true or false)"],
-    },
+    likes: [{ type: ObjectId }],
+    userId: { type: ObjectId, ref: "User" },
+    commentIds: [{ type: ObjectId, ref: "Comment" }],
 
 
 }, { timestamps: true });

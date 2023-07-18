@@ -62,6 +62,54 @@ const PostController = {
             res.status(500).send({ message: "Sorry, something went wrong", error })
         }
     },
+    async getPostAndComments(req, res) {
+        try {
+            const { page = 1, limit = 5 } = req.query;
+            const post = await Post.find()
+                .populate("userId")
+                .populate("commentIds")
+                .skip((page - 1) * limit)
+            res.send({ message: "Yes! here are the comments that you are looking for", post });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ message: "Sorry, we can not get your request! Please check everything if is ok!", error });
+        }
+    },
+    async like(req, res) {
+        try {
+            const post = await Post.findById(req.params._id);
+            const Liked = post.likes.includes(req.user._id)
+            if (Liked) {
+                return res
+                    .status(400)
+                    .send({ message: "Sorry! You can not give two likes in the same post", post });
+            } else {
+                const post = await Post.findByIdAndUpdate(
+                    req.params._id,
+                    { $push: { likes: req.user._id } },
+                    { new: true }
+                );
+                res.send(post);
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ message: "Sorry! something is not working very well", error });
+        }
+    },
+    async dislike(req, res) {
+        try {
+            const post = await Post.findByIdAndUpdate(
+                req.params._id,
+                { $pull: { likes: req.user._id } },
+                { new: true }
+            );
+            res.send({message: "Yes! You dislike this post", post});
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ message: "We can not get your request, something is not working well!", error});
+        }
+    },
+
 
 }
 
