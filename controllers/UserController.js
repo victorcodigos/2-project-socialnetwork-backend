@@ -58,6 +58,43 @@ const UserController = {
     }
   },
 
+  async getInfoLogged(req, res) {
+    try {
+      const user = await User.findById(req.user._id)
+        // .populate({
+        //   path: "orderIds",
+        //   populate: {
+        //     path: "productIds",
+        //   },
+        // })
+        // .populate({
+        //   path: "wishList",
+        // })
+        .populate("postIds");
+      res.send(user);
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  async getUsersByName(req, res) {
+    try {
+      if (req.params.name.length>20){
+      return res.status(400).send('Your search is too long.')
+      }
+      const name = new RegExp(req.params.name, "i");
+      const users = await User.find({
+        $text: {
+          $search: req.params.name,
+        },
+      });
+      res.send(users);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+
   async logout(req, res) {
     try {
       await User.findByIdAndUpdate(req.user._id, {

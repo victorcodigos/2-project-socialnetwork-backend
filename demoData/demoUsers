@@ -1,0 +1,45 @@
+const demoUser1 = {
+  "name": "Alma",
+  "lastName": "Vidal",
+  "birthdate": "1990-05-22",
+  "DNI": "0000000A",
+  "email": "alma@example.com",
+  "password": "pass1",
+};
+
+const demoUser2 = {
+    "name": "Carlos",
+    "lastName": "García",
+    "birthdate": "1985-12-10",
+    "DNI": "0000000B",
+    "email": "carlos@example.com",
+    "password": "pass2",
+  };
+
+  const demoUser3 = {
+    "name": "María",
+    "lastName": "López",
+    "birthdate": "1995-07-15",
+    "DNI": "0000000C",
+    "email": "maria@example.com",
+    "password": "pass3",
+  };
+
+  const demoUser4 = {
+    "name": "Pedro",
+    "lastName": "Ramírez",
+    "birthdate": "1982-03-28",
+    "DNI": "0000000D",
+    "email": "pedro@example.com",
+    "password": "pass4",
+  };
+
+  const demoUser5 = {
+    "name": "Laura",
+    "lastName": "Torres",
+    "birthdate": "1998-09-05",
+    "DNI": "0000000E",
+    "email": "laura@example.com",
+    "password": "pass5",
+  };
+  
