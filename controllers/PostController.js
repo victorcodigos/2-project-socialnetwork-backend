@@ -49,7 +49,19 @@ const PostController = {
             console.error(error);
             res.status(500).send({ message: "Sorry, we could not find this post", error })
         }
-    }
+    },
+    async getAll(req, res) {
+        try {
+            const { page = 1, limit = 2 } = req.query;
+            const posts = await Post.find()
+                .limit(limit)
+                .skip((page - 1) * limit);
+            res.send({ message: `Yes! You are seeing all the posts in the page n° ${page}!`, posts });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ message: "Sorry, something went wrong", error })
+        }
+    },
 
 }
 
