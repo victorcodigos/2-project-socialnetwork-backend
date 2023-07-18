@@ -4,10 +4,6 @@ const ObjectId = mongoose.SchemaTypes.ObjectId;
 const CommentSchema = new mongoose.Schema(
   {
     comment: String,
-    userName: {
-      type: String,
-      ref: "User", // no funciona, no me trae el nombre de usuario al crear comentario
-    },
     userId: {
       type: ObjectId,
       ref: "User",
