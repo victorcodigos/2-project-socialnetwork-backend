@@ -7,6 +7,7 @@ const { authentication, isAuthor } = require("../middleware/authentication");
 router.post('/', authentication, CommentController.create);
 router.put('/id/:_id', authentication, isAuthor, CommentController.update);
 router.put('/likes/:_id', authentication, CommentController.like);
+router.put('/dislikes/:_id', authentication, CommentController.dislike);
 router.delete('/id/:_id', authentication, isAuthor, CommentController.delete)
 
 module.exports = router;

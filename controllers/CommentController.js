@@ -28,9 +28,30 @@ const CommentController ={
     },
     async like(req, res) {
         try {
+          const comment = await Comment.findById(req.params._id);
+          const alreadyLiked = comment.likes.includes(req.user._id)
+          if (alreadyLiked) {
+            return res
+              .status(400)
+              .send({ message: "You have already liked this comment" });
+          } else {
+            const comment = await Comment.findByIdAndUpdate(
+              req.params._id,
+              { $push: { likes: req.user._id } },
+              { new: true }
+            );
+            res.send(comment);
+          }
+        } catch (error) {
+          console.error(error);
+          res.status(500).send({ message: "There was a problem with your like" });
+        }
+      },  
+      async dislike(req, res) {
+        try {
           const comment = await Comment.findByIdAndUpdate(
             req.params._id,
-            { $push: { likes: req.user._id } },
+            { $pull: { likes: req.user._id } },
             { new: true }
           );
           res.send(comment);
@@ -38,7 +59,7 @@ const CommentController ={
           console.error(error);
           res.status(500).send({ message: "There was a problem with your like" });
         }
-      },    
+      },   
     async delete(req,res){
         try {
             const comment = await Comment.findByIdAndDelete(req.params._id)
