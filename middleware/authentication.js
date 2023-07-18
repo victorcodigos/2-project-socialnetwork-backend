@@ -1,8 +1,8 @@
 const User = require('../models/User');
-
 const jwt = require('jsonwebtoken');
+const { jwt_secret } = require('../config/keys.js');
 
-const { jwt_secret } = require('../config/keys.js')
+const Comment = require("../models/Comment");
 
 const authentication = async (req, res, next) => {
 
@@ -20,5 +20,19 @@ const authentication = async (req, res, next) => {
         console.error(error)
         return res.status(500).send({ error, message: 'There is some problem with the token!' })
     }
-}
-module.exports = { authentication }
+};
+
+const isAuthor = async(req, res, next) => {
+    try {
+        const comment = await Comment.findById(req.params._id);
+        if (comment.userId.toString() !== req.user._id.toString()) { 
+            return res.status(403).send({ message: 'You are not authorizated to update/delete this comment, this is not your comment' });
+        }
+        next();
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ error, message: 'Something went wrong checking the author of this comment' })
+    }
+};
+
+module.exports = { authentication, isAuthor }
