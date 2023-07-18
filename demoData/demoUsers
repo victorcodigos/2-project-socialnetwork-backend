@@ -1,3 +1,4 @@
+//EJEMPLOS PARA POSTMAN
 const demoUser1 = {
   "name": "Alma",
   "lastName": "Vidal",
@@ -42,4 +43,6 @@ const demoUser2 = {
     "email": "laura@example.com",
     "password": "pass5",
   };
+
+
   
