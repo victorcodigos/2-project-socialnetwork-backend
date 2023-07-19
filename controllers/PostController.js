@@ -4,7 +4,7 @@ const User = require("../models/User")
 const PostController = {
     async create(req, res) {
         try {
-            const post = await Post.create(req.body);
+            const post = await Post.create({ ...req.body, userId: req.user._id });
             await User.findByIdAndUpdate(req.user._id, { $push: { postIds: post._id } })
             res.status(201).send({ message: "Congrats! You have been created a new post!", post })
         } catch (error) {
@@ -12,6 +12,7 @@ const PostController = {
             res.status(500).send({ message: "Try again! something is not working well", error })
         }
     },
+    async update(req, res, next) {
     async update(req, res, next) {
         try {
             const post = await Post.findByIdAndUpdate(req.params._id, req.body, { new: true })
@@ -25,6 +26,8 @@ const PostController = {
         try {
             const post = await Post.findByIdAndDelete(req.params._id)
             res.send({ message: 'Post deleted', post })
+            const post = await Post.findByIdAndDelete(req.params._id);
+            res.send({ message: 'Post delected', post })
         } catch (error) {
             console.error(error)
             res.status(500).send({ message: 'there was a problem trying to remove the post', error })
@@ -33,8 +36,8 @@ const PostController = {
     },
     async getPostByName(req, res) {
         try {
-            const title = new RegExp(req.params.name, "i");
-            const post = await Post.find({ title });
+            const posts = new RegExp(req.params.name, "i");
+            const post = await Post.find({ posts });
             res.send({ message: "Yes! this is the post that you are looking for", post });
         } catch (error) {
             console.log(error);
@@ -52,7 +55,7 @@ const PostController = {
     },
     async getAll(req, res) {
         try {
-            const { page = 1, limit = 2 } = req.query;
+            const { page = 1, limit = 10 } = req.query;
             const posts = await Post.find()
                 .limit(limit)
                 .skip((page - 1) * limit);
@@ -103,14 +106,29 @@ const PostController = {
                 { $pull: { likes: req.user._id } },
                 { new: true }
             );
-            res.send({message: "Yes! You dislike this post", post});
+            res.send({ message: "Yes! You dislike this post", post });
         } catch (error) {
             console.error(error);
-            res.status(500).send({ message: "We can not get your request, something is not working well!", error});
+            res.status(500).send({ message: "We can not get your request, something is not working well!", error });
         }
     },
+    async getInfo(req, res) {
+
+        try {
+            const post = await User.findById(req.user._id)
+                .populate({
+                    path: "CommentIds",
+                    populate: {
+                        path: "postIds",
+                    },
+                });
+            res.send(post);
+        } catch (error) {
+            console.error(error);
+        }
 
 
+    }
 }
 
 

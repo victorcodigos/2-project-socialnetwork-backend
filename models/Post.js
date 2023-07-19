@@ -5,15 +5,29 @@ const PostSchema = new mongoose.Schema({
 
     post: {
         type: String,
-        required: [true, "Please, insert the title"],
-    
+        required: [true, "Please, insert the post"],
+
     },
     likes: [{ type: ObjectId }],
     userId: { type: ObjectId, ref: "User" },
     commentIds: [{ type: ObjectId, ref: "Comment" }],
 
 
+
+
 }, { timestamps: true });
+
+PostSchema.methods.toJSON = function () {
+
+    const post = this._doc;
+
+    delete post.tokens;
+
+    delete post.password;
+
+    return post;
+
+}
 
 const Post = mongoose.model('Post', PostSchema);
 

@@ -6,7 +6,7 @@ const router = express.Router()
 
 
 
-
+router.get('/info',authentication, PostController.getInfo)
 router.get('/name/:name',PostController.getPostByName)
 router.get('/id/:_id', PostController.getById)
 router.get('/get_all/', PostController.getAll)
