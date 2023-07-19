@@ -45,8 +45,9 @@ const UserController = {
 
       console.log(token)
       const payload = jwt.verify(token, jwt_secret)
-      await User.findOne({ confirmed: true }, 
-         { email: payload.email })
+      console.log(payload)
+      await User.findOneAndUpdate(
+        { email: payload.email }, { confirmed: true })
       res.status(201).send("Congrats! User confirmed successfully!");
     } catch (error) {
       console.error(error)
@@ -124,8 +125,8 @@ const UserController = {
 
   async getUsersByName(req, res) {
     try {
-      if (req.params.name.length>20){
-      return res.status(400).send('Your search is too long.')
+      if (req.params.name.length > 20) {
+        return res.status(400).send('Your search is too long.')
       }
       const name = new RegExp(req.params.name, "i");
       const users = await User.find({
