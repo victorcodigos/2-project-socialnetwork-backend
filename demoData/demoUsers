@@ -1,4 +1,13 @@
 //EJEMPLOS PARA POSTMAN
+const demoUser_correo = {
+  "name": "The Bridge",
+  "lastName": "Mayo",
+  "birthdate": "1990-05-22",
+  "DNI": "0000000T",
+  "email": "thebridge0523@gmail.com",
+  "password": "pass1"
+};
+
 const demoUser1 = {
   "name": "Alma",
   "lastName": "Vidal",

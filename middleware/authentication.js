@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { jwt_secret } = require('../config/keys.js');
 
 const Comment = require("../models/Comment");
+const Post = require('../models/Post');
 
 const authentication = async (req, res, next) => {
 
@@ -22,17 +23,32 @@ const authentication = async (req, res, next) => {
     }
 };
 
-const isAuthor = async(req, res, next) => {
+const isAuthorComment = async(req, res, next) => {
     try {
         const comment = await Comment.findById(req.params._id);
         if (comment.userId.toString() !== req.user._id.toString()) { 
-            return res.status(403).send({ message: "You are not the author. You are not authorizated to update/delete" });
+            return res.status(403).send({ message: "You are not the author. You are not authorizated to update/delete this comment" });
         }
         next();
     } catch (error) {
         console.error(error)
-        return res.status(500).send({ error, message: 'Something went wrong checking the author' })
+        return res.status(500).send({ error, message: 'Something went wrong checking the author of this comment' })
     }
-};
+}
 
-module.exports = { authentication, isAuthor }
+const isAuthorPost = async(req, res, next) => {
+    try {
+        const post = await Post.findById(req.params._id);
+        if (post.userId.toString() !== req.user._id.toString()) { 
+            return res.status(403).send({ message: "You are not the author. You are not authorizated to update/delete this post" });
+        }
+        next();
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ error, message: 'Something went wrong checking the author of this post' })
+    }
+}
+
+;
+
+module.exports = { authentication, isAuthorComment, isAuthorPost }
