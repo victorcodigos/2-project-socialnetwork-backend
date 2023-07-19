@@ -2,10 +2,13 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { jwt_secret } = require("../config/keys.js");
+const { transporter } = require("../config/nodemailer");
 
 //modificar codigo para add extras
 
 const UserController = {
+
+
   async register(req, res, next) {
     try {
       const email = req.body.email;
@@ -15,12 +18,41 @@ const UserController = {
       }
       req.body.role = "user";
       const password = await bcrypt.hash(req.body.password, 10);
-      const newUser = await User.create({ ...req.body, password });
+      const newUser = await User.create({ ...req.body, password, confirmed: false });
+
+      const emailToken = jwt.sign({ email: req.body.email }, jwt_secret, { expiresIn: '100h' })
+      const url = "http://localhost:3000/users/confirmed/" + emailToken
+
+      await transporter.sendMail({
+        to: req.body.email,
+        subject: "Confirm your email!",
+        html: `<h3>Welcome! you are just one step to access it! </h3> 
+        <a href="${url}"> Please, click to confirm it!</a>
+        `,
+      });
+
+
       res.status(201).send({ message: "User created successfully", newUser });
     } catch (error) {
       next(error); //sustituye al status y el error porque ya esta en el middleware
     }
   },
+
+  async confirm(req, res) {
+
+    try {
+      const token = req.params.emailToken
+
+      console.log(token)
+      const payload = jwt.verify(token, jwt_secret)
+      await User.findOne({ confirmed: true }, 
+         { email: payload.email })
+      res.status(201).send("Congrats! User confirmed successfully!");
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
   async login(req, res) {
     try {
       const user = await User.findOne({
@@ -28,6 +60,9 @@ const UserController = {
       });
       if (!user) {
         return res.status(400).send({ message: "Incorrect user or password" });
+      }
+      if (user.confirmed == false) {
+        return res.status(400).send({ message: "Please, you need to confirm your email before access it! Thank you!" });
       }
       const isMatch = await bcrypt.compare(req.body.password, user.password);
       if (!isMatch) {

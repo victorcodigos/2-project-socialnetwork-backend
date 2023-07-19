@@ -33,6 +33,7 @@ const UserSchema = new mongoose.Schema(
     postIds: [{ type: ObjectId, ref: 'Post' }],
     followers: [{ type: ObjectId }],
 
+    confirmed: Boolean,
   },
   { timestamps: true }
 );
