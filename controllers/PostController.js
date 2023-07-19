@@ -13,7 +13,6 @@ const PostController = {
         }
     },
     async update(req, res, next) {
-    async update(req, res, next) {
         try {
             const post = await Post.findByIdAndUpdate(req.params._id, req.body, { new: true })
             res.send({ message: "This post has been updated successfully", post });
@@ -24,10 +23,8 @@ const PostController = {
     },
     async delete(req, res) {
         try {
-            const post = await Post.findByIdAndDelete(req.params._id)
-            res.send({ message: 'Post deleted', post })
             const post = await Post.findByIdAndDelete(req.params._id);
-            res.send({ message: 'Post delected', post })
+            res.send({ message: 'Post deleted', post })
         } catch (error) {
             console.error(error)
             res.status(500).send({ message: 'there was a problem trying to remove the post', error })
