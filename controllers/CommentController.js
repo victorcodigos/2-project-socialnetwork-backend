@@ -1,4 +1,5 @@
 const Comment = require("../models/Comment");
+const Post = require("../models/Post");
 
 //modificar codigo para add extras
 
@@ -11,6 +12,9 @@ const CommentController ={
                 postId: req.params._id,
             })
             const populatedComment = await Comment.findById(comment._id).populate("userId", "name");
+            await Post.findByIdAndUpdate(req.params._id,{$push:{
+              commentIds:comment._id
+            }})
             res.status(201).send({message: "Comment posted", comment:populatedComment })
         } catch (error) {
             console.error(error)
@@ -73,6 +77,7 @@ const CommentController ={
     
 
 }
+
 
 
 

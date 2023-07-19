@@ -34,7 +34,7 @@ const isAuthorComment = async(req, res, next) => {
         console.error(error)
         return res.status(500).send({ error, message: 'Something went wrong checking the author of this comment' })
     }
-}
+};
 
 const isAuthorPost = async(req, res, next) => {
     try {
@@ -47,8 +47,8 @@ const isAuthorPost = async(req, res, next) => {
         console.error(error)
         return res.status(500).send({ error, message: 'Something went wrong checking the author of this post' })
     }
-}
+};
 
-;
+
 
 module.exports = { authentication, isAuthorComment, isAuthorPost }

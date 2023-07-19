@@ -38,6 +38,13 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+UserSchema.methods.toJSON = function() { // Le decimos que no nos devuelva en el documento ni los tokens ni las contraseñas (Es solo para cuando hagas un get info del usuario no aparezcan pero sigue en base de datos)
+  const user = this._doc;
+  delete user.tokens;
+  delete user.password;
+  return user;
+}
+
 UserSchema.index({
   name: "text",
   });
