@@ -18,7 +18,7 @@ const UserController = {
       }
       req.body.role = "user";
       const password = await bcrypt.hash(req.body.password, 10);
-      const newUser = await User.create({ ...req.body, password, confirmed: false });
+      const newUser = await User.create({ ...req.body, password, confirmed: false, image: req.file?.filename });
 
       const emailToken = jwt.sign({ email: req.body.email }, jwt_secret, { expiresIn: '100h' })
       const url = "http://localhost:3000/users/confirmed/" + emailToken

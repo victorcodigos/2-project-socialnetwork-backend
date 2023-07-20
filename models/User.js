@@ -28,6 +28,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please, insert your password"],
     },
+    image:String,
     role: { type: String, default: "user" },
     tokens: [],
     followers: [{ type: ObjectId }],
