@@ -100,8 +100,10 @@ const UserController = {
       .populate("postIds", "post" )
       .populate("followers", "name" )
       .populate("following", "name" )
+
+      const followers = loggedUser.followers.length
  
-      res.send({message: "User Logged:", loggedUser});
+      res.send({message: "User Logged:", loggedUser, followers});
     } catch (error) {
       console.error(error);
     }
