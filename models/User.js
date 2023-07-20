@@ -31,9 +31,9 @@ const UserSchema = new mongoose.Schema(
     image:String,
     role: { type: String, default: "user" },
     tokens: [],
-    followers: [{ type: ObjectId }],
-    following: [{ type: ObjectId }],
-    postIds: [{ type: ObjectId, ref: 'Post' }],
+    followers: [{type: ObjectId, ref: "User"}],
+    following: [{ type: ObjectId, ref: "User" }],
+    postIds: [{ type: ObjectId, ref: "Post" }],
 
 
     confirmed: Boolean,

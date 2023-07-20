@@ -94,47 +94,20 @@ const UserController = {
     }
   },
 
-//   async update(req, res){
-//     try {
-//         const comment = await Comment.findByIdAndUpdate(req.params._id, req.body, { new: true })
-//         const populatedComment = await Comment.findById(comment._id).populate("userId", "name");
-//         res.send({message:"This comment has been updated successfully", comment:populatedComment});
-//     } catch (error) {
-//         console.error(error)
-//         next()
-//     }
-// },
-
   async getInfoLogged(req, res) {
     try {
-      const populatedUser = await User.findById(req.user._id).populate("postIds", "post");
-      // const user = await User.findById(req.user._id)
-        // .populate({
-        //   path: "orderIds",
-        //   populate: {
-        //     path: "productIds",
-        //   },
-        // })
-        // .populate({
-        //   path: "wishList",
-        // })
-        // .populate("postIds",);
+      const loggedUser = await User.findById(req.user._id)
+      .populate("postIds", "post" )
+      .populate("followers", "name" )
+      .populate("following", "name" )
+
+      const followers = loggedUser.followers.length
  
-      res.send(populatedUser);
+      res.send({message: "User Logged:", loggedUser, followers});
     } catch (error) {
       console.error(error);
     }
   },
-
-  // async getInfoLogged(req, res) {
-  //   try {
-  //     const user = await User.findById(req.user._id)
-  //       .populate("postIds");
-  //     res.send(user);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // },
 
   async getUsersByName(req, res) {
     try {
