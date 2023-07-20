@@ -30,9 +30,10 @@ const UserSchema = new mongoose.Schema(
     },
     role: { type: String, default: "user" },
     tokens: [],
-    postIds: [{ type: ObjectId, ref: 'Post' }],
     followers: [{ type: ObjectId }],
     following: [{ type: ObjectId }],
+    postIds: [{ type: ObjectId, ref: 'Post' }],
+
 
     confirmed: Boolean,
   },
