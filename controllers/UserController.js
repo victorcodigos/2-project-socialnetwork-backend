@@ -94,32 +94,32 @@ const UserController = {
     }
   },
 
-//   async update(req, res){
-//     try {
-//         const comment = await Comment.findByIdAndUpdate(req.params._id, req.body, { new: true })
-//         const populatedComment = await Comment.findById(comment._id).populate("userId", "name");
-//         res.send({message:"This comment has been updated successfully", comment:populatedComment});
-//     } catch (error) {
-//         console.error(error)
-//         next()
-//     }
-// },
+  //   async update(req, res){
+  //     try {
+  //         const comment = await Comment.findByIdAndUpdate(req.params._id, req.body, { new: true })
+  //         const populatedComment = await Comment.findById(comment._id).populate("userId", "name");
+  //         res.send({message:"This comment has been updated successfully", comment:populatedComment});
+  //     } catch (error) {
+  //         console.error(error)
+  //         next()
+  //     }
+  // },
 
   async getInfoLogged(req, res) {
     try {
       const populatedUser = await User.findById(req.user._id).populate("postIds", "post");
       // const user = await User.findById(req.user._id)
-        // .populate({
-        //   path: "orderIds",
-        //   populate: {
-        //     path: "productIds",
-        //   },
-        // })
-        // .populate({
-        //   path: "wishList",
-        // })
-        // .populate("postIds",);
- 
+      // .populate({
+      //   path: "orderIds",
+      //   populate: {
+      //     path: "productIds",
+      //   },
+      // })
+      // .populate({
+      //   path: "wishList",
+      // })
+      // .populate("postIds",);
+
       res.send(populatedUser);
     } catch (error) {
       console.error(error);
@@ -153,7 +153,7 @@ const UserController = {
     }
   },
 
-   async follow(req, res) {
+  async follow(req, res) {
     try {
       const user = await User.findById(req.params._id);
       const userLogged = await User.findById(req.user._id);
@@ -178,8 +178,8 @@ const UserController = {
           { $push: { following: req.params._id } },
           { new: true }
         );
-         
-        res.send({message: "You have followed succesfully this user",userFollowed, userFollowing});
+
+        res.send({ message: "You have followed succesfully this user", userFollowed, userFollowing });
       }
     } catch (error) {
       console.error(error);
@@ -187,7 +187,7 @@ const UserController = {
     }
   },
 
-  async unfollow (req, res) {
+  async unfollow(req, res) {
     try {
       const userFollowed = await User.findByIdAndUpdate(
         req.params._id,
@@ -199,12 +199,12 @@ const UserController = {
         { $pull: { following: req.params._id } },
         { new: true }
       );
-      res.send({message: "You have unfollowed succesfully this user",userFollowed, userFollowing});
+      res.send({ message: "You have unfollowed succesfully this user", userFollowed, userFollowing });
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: "There was a problem with your unfollow", error });
     }
-  }, 
+  },
 
   async logout(req, res) {
     try {
@@ -220,6 +220,46 @@ const UserController = {
       });
     }
   },
+  async recoverPassword(req, res) {
+
+    try {
+      const recoverToken = jwt.sign({ email: req.params.email }, jwt_secret, {
+        expiresIn: "48h",
+      });
+      const url = "http://localhost:3000/users/resetPassword/" + recoverToken;
+      await transporter.sendMail({
+        to: req.params.email,
+        subject: "Recover password",
+        html: `<h3> Recover password </h3>,
+    <a href="${url}">CLICK HERE TO RECOVER YOUR PASSWORD</a>,
+    the link will expire in 48 hours!
+    `,
+      });
+      res.send({ message: "An email to recovery your password was sent to your email address." });
+    } catch (error) {
+      console.error(error);
+      res.status(404).send({ message: "Sorry, something went wrong! Please check if you insert the email correctly in the URL.", error });
+    }
+  },
+
+  async resetPassword(req, res) {
+
+    try {
+      const recoverToken = req.params.recoverToken;
+      const payload = jwt.verify(recoverToken, jwt_secret);
+      await User.findOneAndUpdate(
+        { email: payload.email },
+        { password: req.body.password }
+      );
+      res.send({ message: "Password has changed successfully!" });
+    } catch (error) {
+      console.error(error);
+      res.status(404).send({ message: "Sorry, we can not update your passoword!", error });
+    }
+  },
+
+
+
 };
 
 module.exports = UserController;
