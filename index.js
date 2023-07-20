@@ -11,7 +11,7 @@ dbConnection()
 
 //MIDDLEWARE (funcion que ejecutas antes de las rutas)
 app.use(express.json());
-
+app.use(express.static("./public"))
 
 
 //ROUTES /prefix

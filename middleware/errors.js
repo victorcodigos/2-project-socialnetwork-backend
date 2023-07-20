@@ -14,7 +14,7 @@ const handleTypeError = (error, request, response, next) => {
     } else if (error.code === 11000) {
         response.status(400).send("Email has to be unique");
     } else {
-        response.status(500).send("Something went wrong");
+        response.status(500).send(error);
     }
 };
 

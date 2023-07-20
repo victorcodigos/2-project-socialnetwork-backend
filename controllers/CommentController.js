@@ -7,9 +7,10 @@ const CommentController ={
     async create(req, res){
         try {
             const comment = await Comment.create({
-                ...req.body,
-                userId: req.user._id, 
-                postId: req.params._id,
+              ...req.body, 
+              userId: req.user._id, 
+              postId: req.params._id, 
+              image: req.file?.filename
             })
             const populatedComment = await Comment.findById(comment._id).populate("userId", "name");
             await Post.findByIdAndUpdate(req.params._id,{$push:{
@@ -18,7 +19,7 @@ const CommentController ={
             res.status(201).send({message: "Comment posted", comment:populatedComment })
         } catch (error) {
             console.error(error)
-            res.status(500).send({ message: 'Error posting the comment' })
+            res.status(500).send({ message: 'Error posting the comment', error })
         }
     },
     async update(req, res){
