@@ -140,6 +140,40 @@ const UserController = {
     }
   },
 
+   async follow(req, res) {
+    try {
+      const user = await User.findById(req.params._id);
+      const userLogged = await User.findById(req.user._id);
+
+      const alreadyFollow = user.followers.includes(req.user._id);
+
+      if (userLogged._id.toString() === user._id.toString()) {
+        return res.status(400).send({ message: "You cannot follow yourself" });
+      }
+
+      if (alreadyFollow) {
+        return res
+          .status(400)
+          .send({ message: "You already follow this user" });
+      } else {
+        const userFollowed = await User.findByIdAndUpdate(
+          req.params._id,
+          { $push: { followers: req.user._id } },
+          { new: true }
+        );
+        const userFollowing = await User.findByIdAndUpdate(
+          req.user._id,
+          { $push: { following: req.params._id } },
+          { new: true }
+        );
+         
+        res.send({message: "You have followed succefully this user",userFollowed, userFollowing});
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "There was a problem with your follow" });
+    }
+  },
 
   async logout(req, res) {
     try {

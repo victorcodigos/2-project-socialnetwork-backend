@@ -32,6 +32,7 @@ const UserSchema = new mongoose.Schema(
     tokens: [],
     postIds: [{ type: ObjectId, ref: 'Post' }],
     followers: [{ type: ObjectId }],
+    following: [{ type: ObjectId }],
 
     confirmed: Boolean,
   },
