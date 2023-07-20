@@ -8,7 +8,8 @@ const PostSchema = new mongoose.Schema({
         required: [true, "Please, insert the post"],
 
     },
-    likes: [{ type: ObjectId }],
+    image: String,
+    likes: [{ type: ObjectId, ref: "User" }],
     userId: { type: ObjectId, ref: "User" },
     commentIds: [{ type: ObjectId, ref: "Comment" }],
 
@@ -17,17 +18,19 @@ const PostSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-PostSchema.methods.toJSON = function () {
+ PostSchema.methods.toJSON = function () {
 
     const post = this._doc;
-
     delete post.tokens;
-
     delete post.password;
-
-    return post;
+    return post; 
 
 }
+
+PostSchema.index({
+    post: "text",
+});
+
 
 const Post = mongoose.model('Post', PostSchema);
 

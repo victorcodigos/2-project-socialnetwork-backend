@@ -2,9 +2,12 @@ const Post = require("../models/Post");
 const User = require("../models/User")
 
 const PostController = {
+
+
     async create(req, res) {
         try {
-            const post = await Post.create({ ...req.body, userId: req.user._id });
+            console.log(req.file)
+            const post = await Post.create({ ...req.body, userId: req.user._id, image: req.file?.filename });
             await User.findByIdAndUpdate(req.user._id, { $push: { postIds: post._id } })
             res.status(201).send({ message: "Congrats! You have been created a new post!", post })
         } catch (error) {
@@ -33,7 +36,10 @@ const PostController = {
     },
     async getPostByName(req, res) {
         try {
-            const posts = new RegExp(req.params.name, "i");
+            if (req.params.name.length > 25) {
+                return res.status(400).send("Sorry, somenthing went wrong! The term is too long..");
+            }
+            const posts = new RegExp(req.params.posts, "i");
             const post = await Post.find({ posts });
             res.send({ message: "Yes! this is the post that you are looking for", post });
         } catch (error) {
@@ -64,7 +70,7 @@ const PostController = {
     },
     async getPostAndComments(req, res) {
         try {
-            const { page = 1, limit = 5 } = req.query;
+            const { page = 1, limit = 10 } = req.query;
             const post = await Post.find()
                 .populate("userId")
                 .populate("commentIds")
@@ -112,20 +118,17 @@ const PostController = {
     async getInfo(req, res) {
 
         try {
-            const post = await User.findById(req.user._id)
-                .populate({
-                    path: "CommentIds",
-                    populate: {
-                        path: "postIds",
-                    },
-                });
+            const post = await Post.find()
+                .populate("userId").populate("commentIds")
             res.send(post);
         } catch (error) {
             console.error(error);
+            res.status(500).send({ message: "Ops! Something went wrong", error });
         }
 
 
-    }
+    },
+
 }
 
 
