@@ -8,7 +8,6 @@ const { transporter } = require("../config/nodemailer");
 
 const UserController = {
 
-
   async register(req, res, next) {
     try {
       const email = req.body.email;
@@ -18,7 +17,7 @@ const UserController = {
       }
       req.body.role = "user";
       const password = await bcrypt.hash(req.body.password, 10);
-      const newUser = await User.create({ ...req.body, password, confirmed: false, image: req.file?.filename });
+      const newUser = await User.create({ ...req.body, password, confirmed: false });
 
       const emailToken = jwt.sign({ email: req.body.email }, jwt_secret, { expiresIn: '100h' })
       const url = "http://localhost:3000/users/confirmed/" + emailToken
@@ -104,34 +103,6 @@ const UserController = {
       const followers = loggedUser.followers.length
  
       res.send({message: "User Logged:", loggedUser, followers});
-  //   async update(req, res){
-  //     try {
-  //         const comment = await Comment.findByIdAndUpdate(req.params._id, req.body, { new: true })
-  //         const populatedComment = await Comment.findById(comment._id).populate("userId", "name");
-  //         res.send({message:"This comment has been updated successfully", comment:populatedComment});
-  //     } catch (error) {
-  //         console.error(error)
-  //         next()
-  //     }
-  // },
-  
-
-  async getInfoLogged(req, res) {
-    try {
-      const populatedUser = await User.findById(req.user._id).populate("postIds", "post");
-      // const user = await User.findById(req.user._id)
-      // .populate({
-      //   path: "orderIds",
-      //   populate: {
-      //     path: "productIds",
-      //   },
-      // })
-      // .populate({
-      //   path: "wishList",
-      // })
-      // .populate("postIds",);
-
-      res.send(populatedUser);
     } catch (error) {
       console.error(error);
     }
@@ -154,7 +125,7 @@ const UserController = {
     }
   },
 
-  async follow(req, res) {
+   async follow(req, res) {
     try {
       const user = await User.findById(req.params._id);
       const userLogged = await User.findById(req.user._id);
@@ -179,8 +150,8 @@ const UserController = {
           { $push: { following: req.params._id } },
           { new: true }
         );
-
-        res.send({ message: "You have followed succesfully this user", userFollowed, userFollowing });
+         
+        res.send({message: "You have followed succesfully this user",userFollowed, userFollowing});
       }
     } catch (error) {
       console.error(error);
@@ -188,7 +159,7 @@ const UserController = {
     }
   },
 
-  async unfollow(req, res) {
+  async unfollow (req, res) {
     try {
       const userFollowed = await User.findByIdAndUpdate(
         req.params._id,
@@ -200,12 +171,12 @@ const UserController = {
         { $pull: { following: req.params._id } },
         { new: true }
       );
-      res.send({ message: "You have unfollowed succesfully this user", userFollowed, userFollowing });
+      res.send({message: "You have unfollowed succesfully this user",userFollowed, userFollowing});
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: "There was a problem with your unfollow", error });
     }
-  },
+  }, 
 
   async logout(req, res) {
     try {
@@ -221,6 +192,7 @@ const UserController = {
       });
     }
   },
+
   async recoverPassword(req, res) {
 
     try {
@@ -258,7 +230,6 @@ const UserController = {
       res.status(404).send({ message: "Sorry, we can not update your passoword!", error });
     }
   },
-
 
 
 };
