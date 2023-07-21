@@ -1,7 +1,6 @@
 const Multer = require('multer');
 const mimetypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
 
-
 const generateUploadImageMulter = path => Multer({
     storage: Multer.diskStorage({
         destination: (req, file, cb) => cb(null, path),
@@ -16,11 +15,8 @@ const generateUploadImageMulter = path => Multer({
 
 
 const uploadPostImages = generateUploadImageMulter('./public/images');
-
 const uploadCommentImages = generateUploadImageMulter('./public/images');
-
 const uploadUserImages = generateUploadImageMulter('./public/images');
-
 
 
 module.exports = { uploadPostImages, uploadCommentImages, uploadUserImages };

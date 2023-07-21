@@ -1,9 +1,8 @@
 const Post = require("../models/Post");
 const User = require("../models/User")
 
+
 const PostController = {
-
-
     async create(req, res) {
         try {
             console.log(req.file)
@@ -32,7 +31,6 @@ const PostController = {
             console.error(error)
             res.status(500).send({ message: 'there was a problem trying to remove the post', error })
         }
-
     },
     async getPostByName(req, res) {
         try {
@@ -116,7 +114,6 @@ const PostController = {
         }
     },
     async getInfo(req, res) {
-
         try {
             const post = await Post.find()
                 .populate("userId").populate("commentIds")
@@ -125,12 +122,8 @@ const PostController = {
             console.error(error);
             res.status(500).send({ message: "Ops! Something went wrong", error });
         }
-
-
     },
-
-}
-
+};
 
 
 module.exports = PostController;

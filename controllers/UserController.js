@@ -3,11 +3,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { jwt_secret } = require("../config/keys.js");
 const { transporter } = require("../config/nodemailer");
-//modificar codigo para add extras
 
 
 const UserController = {
-
   async register(req, res, next) {
     try {
       const email = req.body.email;
@@ -32,7 +30,6 @@ const UserController = {
       next(error); //sustituye al status y el error porque ya esta en el middleware
     }
   },
-
   async confirm(req, res) {
     try {
       const token = req.params.emailToken
@@ -46,7 +43,6 @@ const UserController = {
       console.error(error)
     }
   },
-
   async login(req, res) {
     try {
       const user = await User.findOne({
@@ -72,7 +68,6 @@ const UserController = {
       res.status(500).send(error);
     }
   },
-
   async getById(req, res) {
     try {
       const user = await User.findById(req.params._id);
@@ -86,7 +81,6 @@ const UserController = {
         });
     }
   },
-
   async getInfoLogged(req, res) {
     try {
       const loggedUser = await User.findById(req.user._id)
@@ -99,7 +93,6 @@ const UserController = {
       console.error(error);
     }
   },
-
   async getUsersByName(req, res) {
     try {
       if (req.params.name.length > 20) {
@@ -116,7 +109,6 @@ const UserController = {
       console.log(error);
     }
   },
-
    async follow(req, res) {
     try {
       const user = await User.findById(req.params._id);
@@ -147,7 +139,6 @@ const UserController = {
       res.status(500).send({ message: "There was a problem with your follow", error });
     }
   },
-
   async unfollow (req, res) {
     try {
       const userFollowed = await User.findByIdAndUpdate(
@@ -166,11 +157,9 @@ const UserController = {
       res.status(500).send({ message: "There was a problem with your unfollow", error });
     }
   }, 
-
   async logout(req, res) {
     try {
       await User.findByIdAndUpdate(req.user._id, {
-        //req.user._id es el usuario loggeado
         $pull: { tokens: req.headers.authorization },
       });
       res.send({ message: "Disconnected successfully!" });
@@ -181,7 +170,6 @@ const UserController = {
       });
     }
   },
-
   async recoverPassword(req, res) {
     try {
       const recoverToken = jwt.sign({ email: req.params.email }, jwt_secret, {
@@ -202,7 +190,6 @@ const UserController = {
       res.status(404).send({ message: "Sorry, something went wrong! Please check if you insert the email correctly in the URL.", error });
     }
   },
-  
   async resetPassword(req, res) {
     try {
       const recoverToken = req.params.recoverToken;

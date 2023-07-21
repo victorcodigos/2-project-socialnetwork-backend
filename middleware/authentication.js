@@ -1,14 +1,11 @@
 const User = require('../models/User');
+const Comment = require("../models/Comment");
+const Post = require('../models/Post');
 const jwt = require('jsonwebtoken');
 const { jwt_secret } = require('../config/keys.js');
 
-const Comment = require("../models/Comment");
-const Post = require('../models/Post');
-
-const authentication = async (req, res, next) => {
-
+const authentication = async (req, res, next) => { 
     try {
-
         const token = req.headers.authorization;
         const payload = jwt.verify(token, jwt_secret);
         const user = await User.findOne({ _id: payload._id, tokens: token });
@@ -48,7 +45,6 @@ const isAuthorPost = async(req, res, next) => {
         return res.status(500).send({ error, message: 'Something went wrong checking the author of this post' })
     }
 };
-
 
 
 module.exports = { authentication, isAuthorComment, isAuthorPost }

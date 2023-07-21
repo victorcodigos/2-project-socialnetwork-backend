@@ -1,7 +1,6 @@
 const Comment = require("../models/Comment");
 const Post = require("../models/Post");
 
-//modificar codigo para add extras
 
 const CommentController ={
     async create(req, res){
@@ -74,12 +73,8 @@ const CommentController ={
             console.error(error)
             res.status(500).send({ message: "there was a problem trying to remove the comment", error})
         }
-    },
-    
-
-}
-
-
+    }, 
+};
 
 
 module.exports = CommentController;

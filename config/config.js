@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { MONGO_URI } = require("./keys");
 
+
 const dbConnection = async () => {
     try {
         await mongoose.connect(MONGO_URI);
@@ -10,6 +11,7 @@ const dbConnection = async () => {
         throw new Error("Error connecting to database");
     }
 };
+
 
 module.exports = {
     dbConnection,
