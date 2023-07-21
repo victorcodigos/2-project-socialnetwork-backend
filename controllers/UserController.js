@@ -98,7 +98,6 @@ const UserController = {
       if (req.params.name.length > 20) {
         return res.status(400).send('Your search is too long.')
       }
-      const name = new RegExp(req.params.name, "i");
       const users = await User.find({
         $text: {
           $search: req.params.name,
