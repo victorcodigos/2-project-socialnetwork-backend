@@ -39,9 +39,9 @@ const PostController = {
             if (req.params.name.length > 25) {
                 return res.status(400).send("Sorry, somenthing went wrong! The term is too long..");
             }
-            const posts = new RegExp(req.params.posts, "i");
-            const post = await Post.find({ posts });
-            res.send({ message: "Yes! this is the post that you are looking for", post });
+            const post = new RegExp(req.params.name, "i");
+            const posts = await Post.find({ post });
+            res.send({ message: "Yes! this is the post that you are looking for", posts });
         } catch (error) {
             console.log(error);
             res.status(500).send({ message: "Sorry, we could not find this post", error })
